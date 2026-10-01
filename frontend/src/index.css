@@ -1,0 +1,460 @@
+:root {
+  --navy: #14213d;
+  --navy-hover: #22335a;
+  --gold: #c9a227;
+  --bg: #f1f3f7;
+  --surface: #ffffff;
+  --border: #d5dbe5;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --danger: #b42318;
+  --danger-bg: #fef3f2;
+  --radius: 12px;
+
+  color-scheme: light;
+  font-family:
+    "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+    "Yu Gothic UI", Meiryo, system-ui, sans-serif;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+#root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- ヘッダー・フッター ---------- */
+
+.site-header {
+  background: var(--navy);
+  border-bottom: 4px solid var(--gold);
+  color: #fff;
+}
+
+.site-header-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+}
+
+.brand-sub {
+  color: var(--gold);
+  font-size: 0.875rem;
+}
+
+.container {
+  flex: 1;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.site-footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.75rem;
+  padding: 16px;
+}
+
+/* ---------- パネル ---------- */
+
+.panel {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow:
+    0 1px 2px rgb(16 24 40 / 0.06),
+    0 4px 16px rgb(16 24 40 / 0.06);
+  padding: 32px;
+}
+
+@media (max-width: 560px) {
+  .panel {
+    padding: 24px 16px;
+  }
+}
+
+.panel-title {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+  color: var(--navy);
+}
+
+.panel-lead {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.alert {
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #fda29b;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-weight: 600;
+  outline: none;
+}
+
+/* ---------- 入力項目 ---------- */
+
+.field {
+  margin: 0 0 24px;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 6px;
+  padding: 0;
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.required-mark,
+.optional-mark {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.6;
+  vertical-align: 0.1em;
+}
+
+.required-mark {
+  background: var(--danger);
+  color: #fff;
+}
+
+.optional-mark {
+  background: #e5e7eb;
+  color: var(--muted);
+}
+
+input[type="text"],
+input[type="date"],
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-size: 1rem; /* iOS で入力時にズームされないよう 16px 以上にする */
+}
+
+input[type="date"] {
+  max-width: 240px;
+  min-height: 46px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+.choice:has(input:focus-visible),
+.button:focus-visible,
+.photo-picker:has(input:focus-visible) .button {
+  outline: 3px solid rgb(201 162 39 / 0.6);
+  outline-offset: 1px;
+}
+
+.is-invalid input[type="text"],
+.is-invalid input[type="date"],
+.is-invalid textarea,
+.is-invalid .choice,
+.is-invalid .photo-preview {
+  border-color: var(--danger);
+}
+
+.hint {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+
+.counter {
+  text-align: right;
+}
+
+/* ラジオボタン・チェックボックス */
+
+.radio-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 420px) {
+  .radio-group {
+    grid-template-columns: 1fr;
+  }
+}
+
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  background: #fff;
+}
+
+.choice:has(input:checked) {
+  border-color: var(--navy);
+  background: #f3f5fa;
+}
+
+.choice input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 4px 0 0;
+  accent-color: var(--navy);
+}
+
+.agreement {
+  font-size: 0.9375rem;
+}
+
+/* 顔写真 */
+
+.photo-picker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.photo-preview {
+  flex: none;
+  width: 90px;
+  height: 120px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #e3e7ee;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 見た目はボタン（label）に任せつつ、未選択時のブラウザの検証メッセージは出せるようにする */
+.visually-hidden-file {
+  position: absolute;
+  left: 106px;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+/* ---------- ボタン ---------- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button-primary {
+  background: var(--navy);
+  color: #fff;
+}
+
+.button-primary:hover {
+  background: var(--navy-hover);
+}
+
+.button-secondary {
+  background: #fff;
+  color: var(--navy);
+  border-color: var(--navy);
+}
+
+.button-secondary:hover {
+  background: #f3f5fa;
+}
+
+.submit {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.0625rem;
+}
+
+/* ---------- ロード画面 ---------- */
+
+.loader {
+  text-align: center;
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.loader-card {
+  position: relative; /* jQuery で left を動かす */
+  width: 180px;
+  height: 114px;
+  margin: 0 auto 28px;
+  border-radius: 10px;
+  background: #f7f8fa;
+  box-shadow: 0 4px 14px rgb(20 33 61 / 0.18);
+  overflow: hidden;
+}
+
+.loader-card-header {
+  height: 22px;
+  background: var(--navy);
+  border-bottom: 3px solid var(--gold);
+}
+
+.loader-card-body {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+}
+
+.loader-card-photo {
+  width: 42px;
+  height: 56px;
+  border-radius: 4px;
+  background: #d7dce5;
+}
+
+.loader-card-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-top: 4px;
+}
+
+.loader-card-lines span {
+  height: 7px;
+  border-radius: 4px;
+  background: #d7dce5;
+}
+
+.loader-card-lines span:nth-child(2) {
+  width: 80%;
+}
+
+.loader-card-lines span:nth-child(3) {
+  width: 60%;
+}
+
+.loader-dots {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  height: 36px;
+  padding-top: 18px;
+}
+
+.loader-dot {
+  position: relative; /* jQuery で top を動かす */
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.loader-message {
+  margin: 12px 0 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+/* ---------- 完了画面 ---------- */
+
+.done {
+  text-align: center;
+}
+
+.done-check {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--navy);
+  color: var(--gold);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.done-message {
+  margin: 8px 0 24px;
+  font-size: 1.0625rem;
+}
+
+.card-figure {
+  margin: 0 0 24px;
+}
+
+.card-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 6px 18px rgb(20 33 61 / 0.22));
+}
+
+.card-figure figcaption {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
