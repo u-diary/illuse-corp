@@ -19,6 +19,12 @@ import (
 // EmployeeNumberHeader は発行した社員番号を返すレスポンスヘッダー。
 const EmployeeNumberHeader = "X-Employee-Number"
 
+// 社員証の PNG に埋め込むメタデータ（tEXt チャンク）のキー。
+const (
+	MetaEmployeeNumber = "EmployeeNumber" // 例: 000001
+	MetaBirthdate      = "Birthdate"      // 入力された生年月日（YYYY-MM-DD）
+)
+
 // Config はハンドラーの設定。
 type Config struct {
 	Store          *store.Store
@@ -126,8 +132,9 @@ func (h *handler) createCard(w http.ResponseWriter, r *http.Request) {
 	generatedAt := h.Now().In(JST)
 	var png []byte
 	number, err := h.Store.Issue(r.Context(), in.Department, generatedAt, func(number int64) error {
+		num := store.FormatNumber(number)
 		img := card.Render(card.Data{
-			EmployeeNumber: store.FormatNumber(number),
+			EmployeeNumber: num,
 			Name:           in.Name,
 			Birthdate:      in.Birthdate,
 			Department:     in.Department,
@@ -135,7 +142,10 @@ func (h *handler) createCard(w http.ResponseWriter, r *http.Request) {
 			Photo:          photo,
 		})
 		var err error
-		png, err = card.EncodePNG(img)
+		png, err = card.EncodePNG(img,
+			card.TextChunk{Key: MetaEmployeeNumber, Value: num},
+			card.TextChunk{Key: MetaBirthdate, Value: in.Birthdate.Format(time.DateOnly)},
+		)
 		return err
 	})
 	if err != nil {

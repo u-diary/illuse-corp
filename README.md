@@ -33,6 +33,7 @@
 | `agreement`  | ○    | `true`                                          |
 
 - 成功時: `200 image/png`、社員番号は `X-Employee-Number` ヘッダー（例: `000001`）
+  - PNG には tEXt チャンクとして `EmployeeNumber`（例: `000001`）と `Birthdate`（入力された生年月日、例: `2001-03-15`）を埋め込む
 - 入力エラー: `400 {"field": "...", "error": "..."}`、送信過多: `429`、サイズ超過: `413`
 
 `department=none` の場合、社員証と DB には「業務統括部クレーム対応室」と記録します。

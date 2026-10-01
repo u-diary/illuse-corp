@@ -46,7 +46,8 @@ export default function App() {
     <>
       <header className="site-header">
         <div className="site-header-inner">
-          <span className="brand">ILLUSE Corp.</span>        </div>
+          <span className="brand">ILLUSE Corp.</span>
+        </div>
       </header>
       <main className="container">
         {screen.kind === "form" && (

@@ -76,7 +76,11 @@ function CompletionMessage() {
               </Fragment>
             ))}
       </p>
-      <span className="done-message-measure" ref={measureRef} aria-hidden="true">
+      <span
+        className="done-message-measure"
+        ref={measureRef}
+        aria-hidden="true"
+      >
         {COMPLETION_MESSAGE}
       </span>
     </div>

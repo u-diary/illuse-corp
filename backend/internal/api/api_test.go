@@ -16,6 +16,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/u-diary/illuse-corp-onboarding/backend/internal/card"
 	"github.com/u-diary/illuse-corp-onboarding/backend/internal/ratelimit"
 	"github.com/u-diary/illuse-corp-onboarding/backend/internal/store"
 )
@@ -129,7 +130,19 @@ func TestCreateCard(t *testing.T) {
 		if got := rec.Header().Get("Access-Control-Expose-Headers"); got != EmployeeNumberHeader {
 			t.Errorf("[%d] Expose-Headers = %q", i, got)
 		}
-		img, err := png.Decode(rec.Body)
+		body := rec.Body.Bytes()
+		meta, err := card.ReadTextChunks(body)
+		if err != nil {
+			t.Fatalf("[%d] メタデータを読めない: %v", i, err)
+		}
+		wantMeta := []card.TextChunk{
+			{Key: MetaEmployeeNumber, Value: tc.wantNumber},
+			{Key: MetaBirthdate, Value: "2000-04-01"},
+		}
+		if len(meta) != 2 || meta[0] != wantMeta[0] || meta[1] != wantMeta[1] {
+			t.Errorf("[%d] メタデータ = %+v, want %+v", i, meta, wantMeta)
+		}
+		img, err := png.Decode(bytes.NewReader(body))
 		if err != nil {
 			t.Fatalf("[%d] PNG として読めない: %v", i, err)
 		}

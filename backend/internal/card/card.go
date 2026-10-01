@@ -6,6 +6,10 @@ package card
 import (
 	"bytes"
 	_ "embed"
+	"encoding/binary"
+	"errors"
+	"fmt"
+	"hash/crc32"
 	"image"
 	"image/draw"
 	"image/png"
@@ -65,13 +69,97 @@ func Render(d Data) *image.RGBA {
 	return img
 }
 
-// EncodePNG は画像を PNG にエンコードする。
-func EncodePNG(img image.Image) ([]byte, error) {
+// TextChunk は PNG に tEXt チャンクとして埋め込むメタデータ。
+// Key は 1〜79 文字、Key・Value とも ASCII の印字可能文字に限る。
+type TextChunk struct {
+	Key   string
+	Value string
+}
+
+// pngHeaderLen は PNG シグネチャ（8 バイト）と IHDR チャンク（長さ 4 + 種別 4 + データ 13 + CRC 4）の長さ。
+const pngHeaderLen = 8 + 4 + 4 + 13 + 4
+
+// EncodePNG は画像を PNG にエンコードし、meta を tEXt チャンクとして埋め込む。
+// image/png はテキストチャンクを書けないため、IHDR の直後に差し込む。
+func EncodePNG(img image.Image, meta ...TextChunk) ([]byte, error) {
 	var buf bytes.Buffer
 	if err := png.Encode(&buf, img); err != nil {
 		return nil, err
 	}
-	return buf.Bytes(), nil
+	b := buf.Bytes()
+	if len(meta) == 0 {
+		return b, nil
+	}
+
+	var out bytes.Buffer
+	out.Grow(len(b) + 128)
+	out.Write(b[:pngHeaderLen])
+	for _, m := range meta {
+		if err := writeTextChunk(&out, m); err != nil {
+			return nil, err
+		}
+	}
+	out.Write(b[pngHeaderLen:])
+	return out.Bytes(), nil
+}
+
+func writeTextChunk(w *bytes.Buffer, m TextChunk) error {
+	if len(m.Key) == 0 || len(m.Key) > 79 || !isPrintableASCII(m.Key) || !isPrintableASCII(m.Value) {
+		return fmt.Errorf("card: tEXt チャンクに使えないキーまたは値です: %q=%q", m.Key, m.Value)
+	}
+	data := make([]byte, 0, len(m.Key)+1+len(m.Value))
+	data = append(data, m.Key...)
+	data = append(data, 0) // キーと値の区切り
+	data = append(data, m.Value...)
+
+	crc := crc32.NewIEEE()
+	crc.Write([]byte("tEXt"))
+	crc.Write(data)
+
+	w.Write(binary.BigEndian.AppendUint32(nil, uint32(len(data))))
+	w.WriteString("tEXt")
+	w.Write(data)
+	w.Write(binary.BigEndian.AppendUint32(nil, crc.Sum32()))
+	return nil
+}
+
+// ReadTextChunks は PNG から tEXt チャンクを読み出す。各チャンクの CRC も検証する。
+func ReadTextChunks(b []byte) ([]TextChunk, error) {
+	if !bytes.HasPrefix(b, []byte("\x89PNG\r\n\x1a\n")) {
+		return nil, errors.New("card: PNG ではありません")
+	}
+	var chunks []TextChunk
+	for p := 8; p < len(b); {
+		if p+12 > len(b) {
+			return nil, errors.New("card: チャンクが途中で切れています")
+		}
+		n := int(binary.BigEndian.Uint32(b[p:]))
+		if p+12+n > len(b) {
+			return nil, errors.New("card: チャンクが途中で切れています")
+		}
+		typ, data := b[p+4:p+8], b[p+8:p+8+n]
+		if crc32.ChecksumIEEE(b[p+4:p+8+n]) != binary.BigEndian.Uint32(b[p+8+n:]) {
+			return nil, fmt.Errorf("card: %s チャンクの CRC が一致しません", typ)
+		}
+		if string(typ) == "tEXt" {
+			key, value, ok := bytes.Cut(data, []byte{0})
+			if !ok {
+				return nil, errors.New("card: tEXt チャンクの形式が正しくありません")
+			}
+			chunks = append(chunks, TextChunk{Key: string(key), Value: string(value)})
+		}
+		p += 12 + n
+	}
+	return chunks, nil
+}
+
+func isPrintableASCII(s string) bool {
+	for i := 0; i < len(s); i++ {
+		if s[i] < 0x20 || s[i] > 0x7e {
+			return false
+		}
+	}
+	return true
 }
 
 // drawPhoto は写真を中央基準で 3:4 に切り抜き、写真枠に合わせて縮小して貼る。
