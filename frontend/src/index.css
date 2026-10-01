@@ -1,6 +1,8 @@
 :root {
-  --navy: #14213d;
-  --navy-hover: #22335a;
+  --sky: #1e90d0; /* 水色（面に使う） */
+  --sky-hover: #1a7fb8;
+  --sky-ink: #1774aa; /* 白地に置く文字用の濃いめの水色 */
+  --sky-tint: #eef7fd;
   --gold: #c9a227;
   --bg: #f1f3f7;
   --surface: #ffffff;
@@ -44,7 +46,7 @@ body {
 /* ---------- ヘッダー・フッター ---------- */
 
 .site-header {
-  background: var(--navy);
+  background: var(--sky);
   border-bottom: 4px solid var(--gold);
   color: #fff;
 }
@@ -66,7 +68,7 @@ body {
 }
 
 .brand-sub {
-  color: var(--gold);
+  color: #fff;
   font-size: 0.875rem;
 }
 
@@ -105,7 +107,7 @@ body {
 .panel-title {
   margin: 0 0 4px;
   font-size: 1.5rem;
-  color: var(--navy);
+  color: var(--sky-ink);
 }
 
 .panel-lead {
@@ -240,8 +242,8 @@ textarea:focus-visible,
 }
 
 .choice:has(input:checked) {
-  border-color: var(--navy);
-  background: #f3f5fa;
+  border-color: var(--sky);
+  background: var(--sky-tint);
 }
 
 .choice input {
@@ -249,7 +251,7 @@ textarea:focus-visible,
   width: 18px;
   height: 18px;
   margin: 4px 0 0;
-  accent-color: var(--navy);
+  accent-color: var(--sky-ink);
 }
 
 .agreement {
@@ -311,22 +313,22 @@ textarea:focus-visible,
 }
 
 .button-primary {
-  background: var(--navy);
+  background: var(--sky);
   color: #fff;
 }
 
 .button-primary:hover {
-  background: var(--navy-hover);
+  background: var(--sky-hover);
 }
 
 .button-secondary {
   background: #fff;
-  color: var(--navy);
-  border-color: var(--navy);
+  color: var(--sky-ink);
+  border-color: var(--sky);
 }
 
 .button-secondary:hover {
-  background: #f3f5fa;
+  background: var(--sky-tint);
 }
 
 .submit {
@@ -356,7 +358,7 @@ textarea:focus-visible,
 
 .loader-card-header {
   height: 22px;
-  background: var(--navy);
+  background: var(--sky);
   border-bottom: 3px solid var(--gold);
 }
 
@@ -415,7 +417,7 @@ textarea:focus-visible,
   margin: 12px 0 0;
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--sky-ink);
 }
 
 /* ---------- 完了画面 ---------- */
@@ -431,8 +433,8 @@ textarea:focus-visible,
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--navy);
-  color: var(--gold);
+  background: var(--sky);
+  color: #fff;
   font-size: 1.75rem;
   font-weight: 700;
 }

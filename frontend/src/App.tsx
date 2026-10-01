@@ -47,7 +47,7 @@ export default function App() {
       <header className="site-header">
         <div className="site-header-inner">
           <span className="brand">ILLUSE Corp.</span>
-          <span className="brand-sub">イリューズ社 入社手続き</span>
+          <span className="brand-sub">onboarding</span>
         </div>
       </header>
       <main className="container">

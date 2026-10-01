@@ -50,12 +50,12 @@ func render() *image.RGBA {
 	}
 
 	// ヘッダー帯。
-	fill(img, image.Rect(0, 0, w, design.HeaderHeight), design.Navy)
+	fill(img, image.Rect(0, 0, w, design.HeaderHeight), design.Sky)
 	fill(img, image.Rect(0, design.HeaderHeight, w, design.HeaderHeight+design.StripeHeight), design.Gold)
-	design.DrawText(img, design.Face(36, true), design.White, 48, 58, "ILLUSE Corp.")
-	design.DrawText(img, design.Face(18, false), design.Gold, 50, 88, "イリューズ社")
+	// 社名は 1 行なので帯の上下中央に置く。
+	design.DrawText(img, design.Face(36, true), design.White, 48, 66, "ILLUSE Corp.")
 	design.DrawTextRight(img, design.Face(34, true), design.White, w-48, 58, "社員証")
-	design.DrawTextRight(img, design.Face(15, false), design.Gold, w-48, 88, "EMPLOYEE  ID  CARD")
+	design.DrawTextRight(img, design.Face(15, false), design.White, w-48, 88, "EMPLOYEE  ID  CARD")
 
 	// 顔写真の枠。
 	fill(img, design.PhotoRect.Inset(-2), design.Rule)
@@ -73,12 +73,12 @@ func render() *image.RGBA {
 	box := design.RemarksBox
 	fill(img, box, design.Rule)
 	fill(img, box.Inset(1), design.White)
-	fill(img, image.Rect(box.Min.X, box.Min.Y, box.Min.X+4, box.Max.Y), design.Navy)
-	design.DrawText(img, design.Face(design.RemarksLabelSize, true), design.Navy,
+	fill(img, image.Rect(box.Min.X, box.Min.Y, box.Min.X+4, box.Max.Y), design.Sky)
+	design.DrawText(img, design.Face(design.RemarksLabelSize, true), design.SkyInk,
 		box.Min.X+design.RemarksPadding, design.RemarksLabelBaseline, design.RemarksLabel)
 
 	// フッター帯。
-	fill(img, image.Rect(0, design.FooterTop, w, h), design.Navy)
+	fill(img, image.Rect(0, design.FooterTop, w, h), design.Sky)
 
 	roundCorners(img, design.CornerRadius)
 	return img
