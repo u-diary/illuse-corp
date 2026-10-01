@@ -1,7 +1,7 @@
 import type { FormValues } from "./form";
 import { normalizePhoto } from "./photo";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_ONBOARD_API_BASE_URL;
 const TIMEOUT_MS = 60_000;
 
 export type IssuedCard = {

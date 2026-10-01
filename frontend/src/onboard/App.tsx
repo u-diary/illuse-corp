@@ -25,13 +25,17 @@ export default function App() {
 
   const handleSubmit = async () => {
     show({ kind: "loading" });
+    // 成功でもエラーでも、ロード画面を最低限表示してから遷移する
+    // （Promise.all だとエラーのときにタイマーを待たず、ロード画面が一瞬で消えてしまう）。
+    const minLoading = new Promise((resolve) =>
+      setTimeout(resolve, MIN_LOADING_MS),
+    );
     try {
-      const [card] = await Promise.all([
-        issueCard(values),
-        new Promise((resolve) => setTimeout(resolve, MIN_LOADING_MS)),
-      ]);
+      const card = await issueCard(values);
+      await minLoading;
       show({ kind: "done", card });
     } catch (e) {
+      await minLoading;
       const error =
         e instanceof SubmitError
           ? e

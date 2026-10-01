@@ -1,0 +1,36 @@
+# サーバー C（fire: 退職・解雇のスタンプを押すサーバー）の systemd ユニット。
+#
+#   sudo cp deploy/illuse-corp-fire.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now illuse-corp-fire
+#
+# 公開は Tailscale Funnel（10000 番）で行う。サーバー自体は 127.0.0.1 でのみ待ち受ける。
+#   sudo tailscale funnel --bg --https=10000 http://127.0.0.1:8083
+
+[Unit]
+Description=ILLUSE Corp. fire - dismissal stamp server (server C)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=prometheus17th
+Group=prometheus17th
+WorkingDirectory=/home/prometheus17th/alice/backend
+ExecStart=/home/prometheus17th/alice/backend/bin/fire-server
+Environment=ILLUSE_ADDR=127.0.0.1:8083
+Environment=ILLUSE_DB=/home/prometheus17th/alice/backend/data/cards.db
+Environment=ILLUSE_SIGNING_KEY_FILE=/etc/illuse/signing-key
+Environment=ILLUSE_ALLOWED_ORIGINS=https://illuse-corp.u-diary.art
+Environment=ILLUSE_RATE_LIMIT=10
+Restart=on-failure
+RestartSec=3
+
+# 最低限のサンドボックス（DB のディレクトリ以外は書き込み不可）
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/prometheus17th/alice/backend/data
+
+[Install]
+WantedBy=multi-user.target

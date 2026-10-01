@@ -1,16 +1,15 @@
 package card
 
 import (
-	"bytes"
 	"image"
 	"image/color"
-	"image/png"
 	"os"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/u-diary/illuse-corp-onboarding/backend/internal/design"
+	"github.com/u-diary/illuse-corp-onboarding/backend/internal/pngmeta"
 )
 
 func TestCropToAspect(t *testing.T) {
@@ -69,7 +68,7 @@ func TestRender(t *testing.T) {
 			if got := img.Bounds(); got != image.Rect(0, 0, design.Width, design.Height) {
 				t.Fatalf("bounds = %v", got)
 			}
-			b, err := EncodePNG(img)
+			b, err := pngmeta.Encode(img)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -79,48 +78,6 @@ func TestRender(t *testing.T) {
 				}
 			}
 		})
-	}
-}
-
-func TestEncodePNGMetadata(t *testing.T) {
-	img := gradient(80, 60)
-	meta := []TextChunk{{"EmployeeNumber", "000042"}, {"Birthdate", "2001-03-15"}}
-	b, err := EncodePNG(img, meta...)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	got, err := ReadTextChunks(b)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(got) != 2 || got[0] != meta[0] || got[1] != meta[1] {
-		t.Errorf("tEXt = %+v, want %+v", got, meta)
-	}
-
-	// チャンクは IHDR の直後（IDAT より前）に入り、画像としても読める。
-	if typ := string(b[pngHeaderLen+4 : pngHeaderLen+8]); typ != "tEXt" {
-		t.Errorf("IHDR の次のチャンク = %q, want tEXt", typ)
-	}
-	decoded, err := png.Decode(bytes.NewReader(b))
-	if err != nil {
-		t.Fatalf("メタデータ入りの PNG を読めない: %v", err)
-	}
-	if decoded.Bounds() != img.Bounds() {
-		t.Errorf("bounds = %v", decoded.Bounds())
-	}
-}
-
-func TestEncodePNGRejectsInvalidMetadata(t *testing.T) {
-	for _, m := range []TextChunk{
-		{"", "x"},
-		{strings.Repeat("k", 80), "x"},
-		{"Name", "山田"}, // tEXt は Latin-1 のみ
-		{"Key", "a\x00b"},
-	} {
-		if _, err := EncodePNG(gradient(8, 8), m); err == nil {
-			t.Errorf("%q=%q がエラーにならない", m.Key, m.Value)
-		}
 	}
 }
 

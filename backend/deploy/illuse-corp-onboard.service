@@ -1,14 +1,14 @@
-# サーバー B（社員証画像の生成サーバー）の systemd ユニット。
+# サーバー B（onboard: 社員証画像の生成サーバー）の systemd ユニット。
 #
-#   sudo cp deploy/illuse-card.service /etc/systemd/system/
+#   sudo cp deploy/illuse-corp-onboard.service /etc/systemd/system/
 #   sudo systemctl daemon-reload
-#   sudo systemctl enable --now illuse-card
+#   sudo systemctl enable --now illuse-corp-onboard
 #
 # 公開は Tailscale Funnel（8443 番）で行う。サーバー自体は 127.0.0.1 でのみ待ち受ける。
-#   tailscale funnel --bg --https=8443 http://127.0.0.1:8081
+#   sudo tailscale funnel --bg --https=8443 http://127.0.0.1:8081
 
 [Unit]
-Description=ILLUSE Corp. employee ID card generator (server B)
+Description=ILLUSE Corp. onboard - employee ID card generator (server B)
 After=network-online.target
 Wants=network-online.target
 
@@ -16,9 +16,10 @@ Wants=network-online.target
 User=prometheus17th
 Group=prometheus17th
 WorkingDirectory=/home/prometheus17th/alice/backend
-ExecStart=/home/prometheus17th/alice/backend/bin/illuse-card-server
+ExecStart=/home/prometheus17th/alice/backend/bin/onboard-server
 Environment=ILLUSE_ADDR=127.0.0.1:8081
 Environment=ILLUSE_DB=/home/prometheus17th/alice/backend/data/cards.db
+Environment=ILLUSE_SIGNING_KEY_FILE=/etc/illuse/signing-key
 Environment=ILLUSE_ALLOWED_ORIGINS=https://illuse-corp.u-diary.art
 Environment=ILLUSE_RATE_LIMIT=5
 Restart=on-failure

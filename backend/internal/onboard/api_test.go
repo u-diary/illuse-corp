@@ -1,4 +1,4 @@
-package api
+package onboard
 
 import (
 	"bytes"
@@ -16,12 +16,21 @@ import (
 	"testing"
 	"time"
 
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/card"
+	"github.com/u-diary/illuse-corp-onboarding/backend/internal/cardmeta"
+	"github.com/u-diary/illuse-corp-onboarding/backend/internal/pngmeta"
 	"github.com/u-diary/illuse-corp-onboarding/backend/internal/ratelimit"
 	"github.com/u-diary/illuse-corp-onboarding/backend/internal/store"
 )
 
 const origin = "https://illuse-corp.u-diary.art"
+
+var testSigner = func() *cardmeta.Signer {
+	s, err := cardmeta.NewSigner(bytes.Repeat([]byte{7}, cardmeta.MinKeyBytes))
+	if err != nil {
+		panic(err)
+	}
+	return s
+}()
 
 var fixedNow = time.Date(2026, 10, 1, 15, 4, 5, 0, JST)
 
@@ -39,6 +48,7 @@ func newEnv(t *testing.T, limit int) *env {
 	t.Cleanup(func() { s.Close() })
 	h := NewHandler(Config{
 		Store:          s,
+		Signer:         testSigner,
 		Limiter:        ratelimit.New(limit, time.Minute),
 		AllowedOrigins: []string{origin},
 		Now:            func() time.Time { return fixedNow },
@@ -131,16 +141,17 @@ func TestCreateCard(t *testing.T) {
 			t.Errorf("[%d] Expose-Headers = %q", i, got)
 		}
 		body := rec.Body.Bytes()
-		meta, err := card.ReadTextChunks(body)
+		meta, err := pngmeta.Read(body)
 		if err != nil {
 			t.Fatalf("[%d] メタデータを読めない: %v", i, err)
 		}
-		wantMeta := []card.TextChunk{
-			{Key: MetaEmployeeNumber, Value: tc.wantNumber},
-			{Key: MetaBirthdate, Value: "2000-04-01"},
+		id, err := testSigner.Verify(meta)
+		wantID := cardmeta.Identity{EmployeeNumber: tc.wantNumber, Birthdate: "2000-04-01"}
+		if err != nil || id != wantID {
+			t.Errorf("[%d] 署名済みメタデータ = %+v, %v, want %+v", i, id, err, wantID)
 		}
-		if len(meta) != 2 || meta[0] != wantMeta[0] || meta[1] != wantMeta[1] {
-			t.Errorf("[%d] メタデータ = %+v, want %+v", i, meta, wantMeta)
+		if len(meta) != 3 {
+			t.Errorf("[%d] tEXt チャンク = %+v, want 社員番号・生年月日・署名の 3 つ", i, meta)
 		}
 		img, err := png.Decode(bytes.NewReader(body))
 		if err != nil {
@@ -280,27 +291,5 @@ func TestPreflight(t *testing.T) {
 	req.Header.Set("Origin", "https://evil.example")
 	if rec := e.do(req); rec.Code != http.StatusForbidden {
 		t.Errorf("許可していない Origin: status = %d", rec.Code)
-	}
-}
-
-func TestClientIP(t *testing.T) {
-	tests := []struct {
-		remote, xff, want string
-	}{
-		{"127.0.0.1:1234", "198.51.100.7", "198.51.100.7"},
-		{"127.0.0.1:1234", "1.2.3.4, 198.51.100.7", "198.51.100.7"}, // 先頭は偽装されうる
-		{"[::1]:1234", "198.51.100.7", "198.51.100.7"},
-		{"127.0.0.1:1234", "", "127.0.0.1"},
-		{"192.0.2.1:1234", "198.51.100.7", "192.0.2.1"}, // プロキシ経由でなければ XFF は無視
-	}
-	for _, tt := range tests {
-		req := httptest.NewRequest(http.MethodGet, "/", nil)
-		req.RemoteAddr = tt.remote
-		if tt.xff != "" {
-			req.Header.Set("X-Forwarded-For", tt.xff)
-		}
-		if got := clientIP(req); got != tt.want {
-			t.Errorf("clientIP(%q, %q) = %q, want %q", tt.remote, tt.xff, got, tt.want)
-		}
 	}
 }

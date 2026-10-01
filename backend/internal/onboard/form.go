@@ -1,4 +1,4 @@
-package api
+package onboard
 
 import (
 	"errors"
