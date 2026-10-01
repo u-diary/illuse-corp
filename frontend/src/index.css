@@ -67,11 +67,6 @@ body {
   letter-spacing: 0.02em;
 }
 
-.brand-sub {
-  color: #fff;
-  font-size: 0.875rem;
-}
-
 .container {
   flex: 1;
   width: 100%;
@@ -439,9 +434,29 @@ textarea:focus-visible,
   font-weight: 700;
 }
 
-.done-message {
+.done-message-wrap {
+  position: relative;
+  overflow: hidden; /* 測定用の複製がはみ出して横スクロールが出ないように */
   margin: 8px 0 24px;
+}
+
+.done-message,
+.done-message-measure {
   font-size: 1.0625rem;
+}
+
+.done-message {
+  margin: 0;
+}
+
+/* 1 行に収まるかを測るための非表示の複製 */
+.done-message-measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 .card-figure {
