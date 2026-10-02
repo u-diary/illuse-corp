@@ -15,8 +15,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/cardmeta"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/store"
+	"github.com/u-diary/illuse-corp/backend/internal/cardmeta"
+	"github.com/u-diary/illuse-corp/backend/internal/store"
 )
 
 // 共通の設定（環境変数）。

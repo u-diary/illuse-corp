@@ -14,12 +14,12 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/cardmeta"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/httpx"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/pngmeta"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/ratelimit"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/stamp"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/store"
+	"github.com/u-diary/illuse-corp/backend/internal/cardmeta"
+	"github.com/u-diary/illuse-corp/backend/internal/httpx"
+	"github.com/u-diary/illuse-corp/backend/internal/pngmeta"
+	"github.com/u-diary/illuse-corp/backend/internal/ratelimit"
+	"github.com/u-diary/illuse-corp/backend/internal/stamp"
+	"github.com/u-diary/illuse-corp/backend/internal/store"
 )
 
 // Action は選択できる処理内容。

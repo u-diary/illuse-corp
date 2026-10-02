@@ -14,9 +14,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/app"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/fire"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/ratelimit"
+	"github.com/u-diary/illuse-corp/backend/internal/app"
+	"github.com/u-diary/illuse-corp/backend/internal/fire"
+	"github.com/u-diary/illuse-corp/backend/internal/ratelimit"
 )
 
 func main() {

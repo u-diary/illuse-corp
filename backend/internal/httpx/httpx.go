@@ -8,7 +8,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/ratelimit"
+	"github.com/u-diary/illuse-corp/backend/internal/ratelimit"
 )
 
 // CORS は許可した Origin にだけ CORS ヘッダーを付ける。

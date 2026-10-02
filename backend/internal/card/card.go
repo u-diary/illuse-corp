@@ -14,7 +14,7 @@ import (
 
 	xdraw "golang.org/x/image/draw"
 
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/design"
+	"github.com/u-diary/illuse-corp/backend/internal/design"
 )
 
 //go:embed assets/background.png

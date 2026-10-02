@@ -1,4 +1,4 @@
-module github.com/u-diary/illuse-corp-onboarding/backend
+module github.com/u-diary/illuse-corp/backend
 
 go 1.26.1
 

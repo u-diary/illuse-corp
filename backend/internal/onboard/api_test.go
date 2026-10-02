@@ -16,10 +16,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/cardmeta"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/pngmeta"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/ratelimit"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/store"
+	"github.com/u-diary/illuse-corp/backend/internal/cardmeta"
+	"github.com/u-diary/illuse-corp/backend/internal/pngmeta"
+	"github.com/u-diary/illuse-corp/backend/internal/ratelimit"
+	"github.com/u-diary/illuse-corp/backend/internal/store"
 )
 
 const origin = "https://illuse-corp.u-diary.art"

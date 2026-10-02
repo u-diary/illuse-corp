@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/pngmeta"
+	"github.com/u-diary/illuse-corp/backend/internal/pngmeta"
 )
 
 func newSigner(t *testing.T, seed byte) *Signer {

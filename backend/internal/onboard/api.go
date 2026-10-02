@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/card"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/cardmeta"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/httpx"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/pngmeta"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/ratelimit"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/store"
+	"github.com/u-diary/illuse-corp/backend/internal/card"
+	"github.com/u-diary/illuse-corp/backend/internal/cardmeta"
+	"github.com/u-diary/illuse-corp/backend/internal/httpx"
+	"github.com/u-diary/illuse-corp/backend/internal/pngmeta"
+	"github.com/u-diary/illuse-corp/backend/internal/ratelimit"
+	"github.com/u-diary/illuse-corp/backend/internal/store"
 )
 
 // EmployeeNumberHeader は発行した社員番号を返すレスポンスヘッダー。

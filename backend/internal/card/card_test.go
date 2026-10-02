@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/design"
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/pngmeta"
+	"github.com/u-diary/illuse-corp/backend/internal/design"
+	"github.com/u-diary/illuse-corp/backend/internal/pngmeta"
 )
 
 func TestCropToAspect(t *testing.T) {

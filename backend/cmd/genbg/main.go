@@ -14,7 +14,7 @@ import (
 	"math"
 	"os"
 
-	"github.com/u-diary/illuse-corp-onboarding/backend/internal/design"
+	"github.com/u-diary/illuse-corp/backend/internal/design"
 )
 
 func main() {

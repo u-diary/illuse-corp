@@ -1,4 +1,4 @@
-# illuse-corp-onboarding
+# illuse-corp
 
 イリューズ社の社内向けアプリケーション 2 つを収めたリポジトリです。
 
